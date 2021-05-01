@@ -8,15 +8,31 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@asigloo/vue-dynamic-forms": "^3.14.0",
+    "@form-create/element-ui": "^2.5.0-alpha.2",
     "axios": "^0.21.1",
+    "bcrypt": "^5.0.1",
+    "body-parser": "latest",
     "core-js": "^3.6.5",
+    "element-plus": "^1.0.2-beta.32",
+    "errorhandler": "^1.5.1",
     "express": "^4.17.1",
     "express-graphql": "^0.12.0",
     "graphql": "^15.5.0",
     "handsontable": "^8.3.1",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.20",
+    "morgan": "^1.10.0",
+    "mysql": "^2.18.1",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
-    "vuex": "^4.0.0-0"
+    "vuex": "^4.0.0-0",
+    "http-errors": "latest",
+    "cookie-parser": "latest",
+    "cookie-parser": "latest"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
@@ -26,8 +42,9 @@
     "@vue/cli-service": "~4.5.0",
     "@vue/compiler-sfc": "^3.0.0",
     "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
+    "cors": "^2.8.5",
     "eslint-plugin-vue": "^7.0.0-0",
+    "express-session": "^1.17.1",
     "vue-cli-plugin-vuetify": "^2.1.0"
   },
   "eslintConfig": {
