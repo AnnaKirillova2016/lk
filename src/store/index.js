@@ -1,12 +1,27 @@
 import {createStore} from 'vuex'
-import jsonSChema from '../assets/schemaFile.js'
+import {jsonSchemaInt} from '../assets/schemaFile.js'
 import axios from 'axios'
+import {convertF} from '../components/convertation'
 
 export default createStore({
   state: {
     user: null,
     token:'isNull',
-    usersData:[]
+    usersData:[],
+    intSchema :{btn:{comp:"button", text:"No JSON data loaded", class: "warning"}},
+    dataSchema : {}
+    /*intSchema: {
+        anketa_education_level:{
+            "comp": "group",
+            "col": "24",
+            "header": "Уровень образования",
+            "schema": {
+                "anketa_ord": { "comp": "checkbox", "text": "Ординатура" },
+                "anketa_spo": { "comp": "checkbox", "text": "Среднее профессиональное образование" },
+                "anketa_vo":  { "comp": "checkbox", "text": "Высшее образование" }
+            }
+        }
+        }*/
   },
   mutations: {
   },
@@ -39,9 +54,15 @@ export default createStore({
       localStorage.removeItem('user')
       localStorage.removeItem('token')
     },
-    schemaConverterInc(){
-      let schemaJSON = jsonSChema.jsonSchema()
-      return schemaJSON
+    schemaConverterInc({state}){
+        let schemaJSON = jsonSchemaInt() //парсинг через json.parse не работает. Не распознаются символы
+        let result = {int:{},data:{}}
+        result.int = convertF('interface',schemaJSON)
+        result.data = convertF('data',schemaJSON)
+
+        state.intSchema = result.int
+        state.dataSchema = result.data
+        console.log(result)
     },
     async getTableUsers({state}){
       await axios
