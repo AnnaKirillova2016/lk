@@ -5,7 +5,7 @@ services:
     environment:
       #- ALLOW_EMPTY_PASSWORD=yes
       - MARIADB_ROOT_USER=root
-      - MARIADB_ROOT_PASSWORD=123
+      - MARIADB_ROOT_PASSWORD=beLxD88813
       - MARIADB_USER=user
       - MARIADB_PASSWORD=123
       - MARIADB_DATABASE=lkBase

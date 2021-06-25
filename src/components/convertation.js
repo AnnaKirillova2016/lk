@@ -1,9 +1,111 @@
+let sList = []
+
+function sListNotNull(){
+    let jsKeys = Object.keys(sList)
+    if(jsKeys.length > 0){
+        return true
+    }else{
+        return false
+    }
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function convertUpload(jData){
+    let result = {}
+    result[jData.УИД] = {
+        "comp": "file",
+        "action": "",
+        "autoUpload": false,
+        "text": "Upload Selector",
+        "accept": " .jpg, .jpeg, .png, .gif",
+        "tip": "Only Images",
+        "schema": {
+            "comp": "button",
+            "type": "Primary",
+            "style": {
+                "display": "block",
+                "marginTop":"10px"
+            },
+        "size": "large",
+        "text": jData.Наименование,
+        }
+    }
+    return result
+}
+
+function convertSelect(jData) {
+    let result = {}
+    result[jData.УИД] = {
+        "comp":"select",
+        "placeholder": jData.Наименование,
+        "label": jData.Наименование + ': ',
+        "style": {
+            "marginBottom":"10px"
+        },
+    }
+    if(sListNotNull()){
+        result[jData.УИД]['options'] = sList[jData['Параметры']['listData']]
+    }else{
+        result[jData.УИД]['options'] ={}
+    }
+
+
+    return result
+}
+
+function convertRadio(jData) {
+    let result = {}
+    result[jData.УИД] = {
+        "comp":"radioButton",
+        "name": jData.Наименование,
+        "style": {
+            "marginBottom":"10px",
+            "marginTop":"10px"
+        },
+    }
+
+    let arrVal = []
+    for (let i = 0; i < jData.Элементы.length; i++) {
+        let el = jData.Элементы[i]
+        arrVal.push({
+            "name": el['Наименование'],
+            "label": el['Наименование'],
+            "uid": el['Значение']['uid']
+            })
+    }
+
+    result[jData.УИД]['options'] = arrVal
+
+    return result
+}
+
+function convertAlert(jData) {
+    let result = {}
+    result[jData.УИД] = {
+        "comp":"alert",
+        "title": jData.Значение,
+        "closable":false,
+        "style": {
+            "marginBottom":"5px"
+        }
+
+    }
+    if(jData.Параметры['Класс'] == 'primary'){
+        result[jData.УИД]['type'] = "info"
+    }else if(jData.Параметры['Класс'] == 'warning'){
+        result[jData.УИД]['type'] = "warning"
+    }
+
+    return result
+}
 
 function convertChkbx(jData) {
     let result = {}
     result[jData.УИД] = {
         "comp":"checkbox",
-        "text": jData.Наименование
+        "text": jData.Наименование,
+        "style": {
+            "marginTop":"10px"
+        },
     }
 
     return result
@@ -14,7 +116,10 @@ function convertInput(jData) {
     result[jData.УИД] = {
         "comp":"input",
         "label": jData.Наименование,
-        "placeholder": jData.Значение
+        "placeholder": jData.Значение,
+        "style": {
+            "marginTop":"10px"
+        },
     }
 
     return result
@@ -24,7 +129,10 @@ function convertDate(jData) {
     let result = {}
     result[jData.УИД] = {
         "comp":"datePicker",
-        "label": jData.Наименование
+        "label": jData.Наименование,
+        "style": {
+            "marginTop":"10px"
+        },
     }
 
     return result
@@ -34,34 +142,17 @@ function convertButton(jData){
     let result = {}
     result[jData.УИД] = {
         "comp":"button",
-        "text":jData.Наименование
+        "text":jData.Наименование,
+        "style": {
+            "marginTop":"10px"
+        },
     }
     return result
 }
 
 function convertElement(jData) {
     let result = {}
-    if(Object.prototype.hasOwnProperty.call(jData, 'Элементы')){
-        /*if(jData.Тип == 'Группа') {*/
-            result[jData.УИД] = {
-                "comp": "group",
-                "col": "24",
-                "header": jData.Наименование,
-                "schema": "{}"
-            }
-      /*  }else{
-            result[jData.УИД] = {
-                "comp": "wrap",
-                "col": "24",
-                "header": jData.Наименование,
-                "schema": "{}"
-            }
-        }*/
-        result[jData.УИД].schema = convertElements(jData.Элементы)
-        if (Object.keys(result[jData.УИД].schema).length === 0){
-            delete(result[jData.УИД])
-        }
-    }else if(Object.prototype.hasOwnProperty.call(jData, 'Тип')){
+    if(Object.prototype.hasOwnProperty.call(jData, 'Тип')){
         if(jData.Тип == 'ЭлементЧекБокс'){
             result = convertChkbx(jData)
         }else if(jData.Тип == 'ЭлементСтрока' || jData.Тип == 'ЭлементТелефон' || jData.Тип == 'ЭлементАдрес'){
@@ -70,10 +161,31 @@ function convertElement(jData) {
             result = convertDate(jData)
         }else if(jData.Тип.indexOf('Кнопка') > -1){
             result = convertButton(jData)
+        }else if(jData.Тип.indexOf('ЭлементСообщение') > -1){
+            result = convertAlert(jData)
+        }else if(jData.Тип.indexOf('ЭлементРадио') > -1){
+            result = convertRadio(jData)
+        }else if(jData.Тип.indexOf('ЭлементСелект') > -1) {
+            result =convertSelect(jData)
+        }else if(jData.Тип.indexOf('ЭлементСкан') > -1) {
+            result =convertUpload(jData)
+        }else if(Object.prototype.hasOwnProperty.call(jData, 'Элементы')){
+            result[jData.УИД] = {
+                "comp": "group",
+                "col": "24",
+                "header": jData.Наименование,
+                "schema": "{}",
+                "style": {
+                    "marginBottom":"10px"
+                },
+            }
+            result[jData.УИД].schema = convertElements(jData.Элементы)
+            if (Object.keys(result[jData.УИД].schema).length === 0){
+                delete(result[jData.УИД])
+            }
         }
 
     }
-
     return result
 }
 
@@ -82,7 +194,6 @@ function convertElements(jData) {
 
     if(Array.isArray(jData)) {
         result = {}
-
         for (let i = 0; i < jData.length; i++) {
             let jsT = convertElements(jData[i])
             let jsKeys = Object.keys(jsT)
@@ -100,24 +211,42 @@ function convertElements(jData) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
+function convertDataUpload(jData) {
+    let result = {}
+    result[jData.УИД] = {}
+    return result
+}
+
+function convertDataSelect(jData) {
+    let result = {}
+    result[jData.УИД] = {}
+
+    return result
+}
+
+function convertDataRadio(jData) {
+    let result = {}
+    result[jData.УИД] = {
+
+    }
+
+    return result
+}
+
+function convertDataAlert(jData) {
+    let result = {}
+    result[jData.УИД] = {}
+    return result
+}
 
 function convertDataChkbx(jData) {
     let result = {}
-    /*result[jData.УИД] = {
-        "comp":"checkbox",
-        "text": jData.Наименование
-    }*/
     result[jData.УИД] = jData.Помечен
     return result
 }
 
 function convertDataInput(jData) {
     let result = {}
-    /*result[jData.УИД] = {
-        "comp":"checkbox",
-        "label": jData.Наименование,
-        "placehoder": jData.Значение
-    }*/
     result[jData.УИД] = jData.Значение
 
     return result
@@ -139,13 +268,7 @@ function convertDataButton(jData) {
 
 function convertDataElement(jData) {
     let result = {}
-    if(Object.prototype.hasOwnProperty.call(jData, 'Элементы')){
-        result[jData.УИД] = {}
-        result[jData.УИД] = convertDataElements(jData.Элементы)
-        if (Object.keys(result[jData.УИД]).length === 0){
-            delete(result[jData.УИД])
-        }
-    }else if(Object.prototype.hasOwnProperty.call(jData, 'Тип')){
+    if(Object.prototype.hasOwnProperty.call(jData, 'Тип')){
         if(jData.Тип == 'ЭлементЧекБокс'){
             result = convertDataChkbx(jData)
         }else if(jData.Тип == 'ЭлементСтрока' || jData.Тип == 'ЭлементТелефон' || jData.Тип == 'ЭлементАдрес'){
@@ -154,8 +277,21 @@ function convertDataElement(jData) {
             result = convertDataDate(jData)
         }else if(jData.Тип.indexOf('Кнопка') > -1){
             result = convertDataButton(jData)
+        }else if(jData.Тип.indexOf('ЭлементСообщение') > -1) {
+            result = convertDataAlert(jData)
+        }else if(jData.Тип.indexOf('ЭлементРадио') > -1){
+            result = convertDataRadio(jData)
+        }else if(jData.Тип.indexOf('ЭлементСелект') > -1) {
+            result = convertDataSelect(jData)
+        }else if(jData.Тип.indexOf('ЭлементСкан') > -1) {
+            result =convertDataUpload(jData)
+        }else if(Object.prototype.hasOwnProperty.call(jData, 'Элементы')){
+            result[jData.УИД] = {}
+            result[jData.УИД] = convertDataElements(jData.Элементы)
+            if (Object.keys(result[jData.УИД]).length === 0){
+                delete(result[jData.УИД])
+            }
         }
-
 
     }
 
@@ -184,10 +320,71 @@ return result
 
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
+function isJson(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
 
-/*function convertData(jData) {
-   console.log('Это заглушка для ' + jData )
-}*/
+function convertSelectElement(jData) {
+    let result = {}
+    let jsKeys =  Object.keys(jData)
+    for (let i = 0; i < jsKeys.length; i++) {
+        let el = jData[jsKeys[i]]
+        if (Array.isArray(el)) {
+            let arrJ = []
+            for (let i = 1; i < el.length; i++) {
+                let tJs = el[i]['Ссылка']
+                if (!isJson(tJs)) {
+                    tJs = el[i]
+                }
+                try {
+                    if(Object.prototype.hasOwnProperty.call(tJs,'Наименование')){
+                        tJs['label'] = tJs['Наименование']
+                        tJs['value'] = tJs['Наименование']
+                    }else{
+                        tJs['label'] = tJs['name']
+                        tJs['value'] = tJs['name']
+                    }
+
+                }catch (e){
+                    console.log(e)
+                }
+
+                arrJ.push(tJs)
+            }
+            result[jsKeys[i]] = arrJ
+        }
+
+    }/*else if(jsKeys.length > 1){
+        for (let i = 0; i < jsKeys.length; i++) {
+            result[jsKeys[i]] = convertSelectElement(jData[jsKeys[i]])
+        }
+    }*/
+    return result
+}
+
+function convertSelectList(jData) {
+    let result = {}
+
+    if(Array.isArray(jData)) {
+        for (let i = 0; i < jData.length; i++) {
+            let jsKeys = Object.keys(jData)
+            result[jsKeys[i]] = convertSelectElement(jData[i])
+        }
+
+    }else {
+        result = convertSelectElement(jData)
+    }
+
+    return result
+
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function defineType(type, jData) {
     let result = {}
@@ -214,18 +411,24 @@ function defineType(type, jData) {
             }
         }
     }
+
     jData = jData.Output.Data
 
     if(type == 'interface'){
         result = convertElements(jData)
+
     }else if(type == 'data'){
         result = convertDataElements(jData)
+    }else if(type == 'select'){
+
+        result = convertSelectList(jData)
     }
+
     return result
 }
 
-export function convertF(type, jData) {
-
+export function convertF(type, jData, selectList = []) {
+    sList = selectList
     return defineType(type,jData)
 
 }

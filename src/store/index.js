@@ -1,5 +1,5 @@
 import {createStore} from 'vuex'
-import {jsonSchemaInt} from '../assets/schemaFile.js'
+import schemaFile from '../assets/schemaFile.js'
 import axios from 'axios'
 import {convertF} from '../components/convertation'
 
@@ -8,7 +8,7 @@ export default createStore({
     user: null,
     token:'isNull',
     usersData:[],
-    intSchema :{btn:{comp:"button", text:"No JSON data loaded", class: "warning"}},
+    intSchema :{btn:{comp:"button", text:"No JSON data loaded", type: "warning"}},
     dataSchema : {}
     /*intSchema: {
         anketa_education_level:{
@@ -55,13 +55,24 @@ export default createStore({
       localStorage.removeItem('token')
     },
     schemaConverterInc({state}){
-        let schemaJSON = jsonSchemaInt() //парсинг через json.parse не работает. Не распознаются символы
+        let schemaJSON = schemaFile.schemaInt() //парсинг через json.parse не работает. Не распознаются символы
+        //let schemaJSON = schemaFile.schemaTest1()
+        //let schemaJSON = schemaFile.schemaTest()
+
+        let schemaData = convertF('select',schemaFile.schemaData())
+       /* console.log('SelectList')
+        console.log(schemaData)
+        console.log('---------------------------------------')*/
         let result = {int:{},data:{}}
-        result.int = convertF('interface',schemaJSON)
+        result.int = convertF('interface',schemaJSON,schemaData)
         result.data = convertF('data',schemaJSON)
 
-        state.intSchema = result.int
-        state.dataSchema = result.data
+        //result = null
+        if (result != null) {
+            state.intSchema = result.int
+            state.dataSchema = result.data
+        }
+
         console.log(result)
     },
     async getTableUsers({state}){

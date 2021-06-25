@@ -322,6 +322,8 @@ const mapSchemaToElement ={
     slider:{ comp: 'el-slider', schema:{ showTooltip:false }, events:{ change:'update' } },
     range:{ comp: 'el-slider', events:{ change:'update' } },
 
+    alert:{ comp: 'el-alert', events:{ change:'update' } },
+
 }
 
 //#endregion

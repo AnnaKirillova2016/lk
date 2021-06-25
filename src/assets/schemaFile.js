@@ -1,4 +1,4 @@
-export function jsonSchemaInt() {
+exports.schemaInt = function jsonSchemaInt() {
     return {
         "Info": {
             "Function": "iLKA_Anketa",
@@ -1569,7 +1569,7 @@ export function jsonSchemaInt() {
     }
 }
 
-export function jsonSchemaData(){
+exports.schemaData = function jsonSchemaData(){
           return {
               "Info": {
                   "Function": "iLKA_frontEndData",
@@ -3897,3 +3897,147 @@ export function jsonSchemaData(){
               }
           }
     }
+exports.schemaTest = function jsonSchemaTest() {
+    return {
+        "Info": {
+            "Function": "test",
+            "Ref": {
+                "type": "CatalogRef",
+                "catalog": "Обработчик",
+                "uid": "ae52edf4-2d59-11eb-80e9-56f648e28899",
+                "name": "СтруктураАнкеты"
+            },
+            "Method": "",
+            "InputDescription": "",
+            "OutputDescription": "",
+            "Description": "",
+            "Status": true,
+            "Enabled": true,
+            "AuthenticationGUID": false,
+            "Comment": "Доступ разрешен! Аутентификация выключена."
+        },
+        "Input": {},
+        "Output": {
+            "State": true,
+            "Data": [
+                {
+                    "Наименование": "Тестовый блок",
+                    "Тип": "Блок",
+                    "УИД": "blockOne",
+                    "Параметры": {},
+                    "Элементы": [
+                        {
+                            "Наименование": "Фамилия Имя Отчество",
+                            "Тип": "ЭлементСтрока",
+                            "УИД": "FIO",
+                            "Параметры": {},
+                            "Значение": "",
+                        },
+                        {
+                            "Наименование": "Среднее профессиональное образование",
+                            "Тип": "ЭлементЧекБокс",
+                            "УИД": "anketa_spo",
+                            "Параметры": {
+                                "addClass": "visible_set_check"
+                            },
+                            "Помечен": false
+                        },
+                        {
+                            "Наименование": "Высшее образование",
+                            "Тип": "ЭлементЧекБокс",
+                            "УИД": "anketa_vo",
+                            "Параметры": {
+                                "addClass": "visible_set_check"
+                            },
+                            "Помечен": false
+                        },
+                        {
+                            "Наименование": "",
+                            "Тип": "ЭлементСообщение",
+                            "Параметры": {
+                                "Класс": "primary"
+                            },
+                            "Значение": "Выберите уровень образования, на который планируете поступать."
+                        }
+                    ]
+                },
+
+            ]
+        }
+    }
+}
+
+exports.schemaTest1 = function jsonSchemaTest1() {
+    return {
+        "Info": {
+            "Function": "test",
+            "Ref": {
+                "type": "CatalogRef",
+                "catalog": "Обработчик",
+                "uid": "ae52edf4-2d59-11eb-80e9-56f648e28899",
+                "name": "СтруктураАнкеты"
+            },
+            "Method": "",
+            "InputDescription": "",
+            "OutputDescription": "",
+            "Description": "",
+            "Status": true,
+            "Enabled": true,
+            "AuthenticationGUID": false,
+            "Comment": "Доступ разрешен! Аутентификация выключена."
+        },
+        "Input": {},
+        "Output": {
+            "State": true,
+            "Data": [
+                {
+                    "Наименование": "Тестовый блок",
+                    "Тип": "Блок",
+                    "УИД": "blockOne",
+                    "Параметры": {},
+                    "Элементы": [
+                        {
+                            "Наименование": "Имя",
+                            "Тип": "ЭлементСтрока",
+                            "УИД": "firstName",
+                            "Параметры": {},
+                            "Значение": "",
+                        },
+                        {
+                            "Наименование": "Дата рождения",
+                            "Тип": "ЭлементДата",
+                            "УИД": "birthdate",
+                            "Параметры": {
+                                "check": "is-invalid",
+                                "ГодПоУмолчанию": 1971
+                            },
+                            "Значение": "",
+                            "Идентификатор": "ДатаРождения"
+                        },
+                        {
+                            "Наименование": "Подтверить",
+                            "Тип": "КнопкаПодтвердить",
+                            "УИД": "checked",
+                            "Параметры": {}
+                        },
+                        {
+                        "Наименование": "Дата подачи",
+        "Тип": "ЭлементДата",
+        "УИД": "te",
+        "Параметры": {
+        "check": "is-invalid",
+            "ГодПоУмолчанию": 2021
+    },
+    "Значение": "",
+        "Идентификатор": "ДатаРождения"
+},
+
+                    ]
+                },
+
+            ]
+        }
+    }
+}
+
+
