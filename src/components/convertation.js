@@ -9,6 +9,46 @@ function sListNotNull(){
     }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function convertUploadChk(jData){
+    let result = {}
+    result[jData.УИД] ={
+        "comp":"array",
+        "col":"24",
+        "schema":{}
+    }
+
+    result[jData.УИД]['schema'][jData.УИД + 'Chk'] = {
+        "comp": "checkbox",
+        "text": "Обработать",
+        "col":"2",
+        "style": {
+            "marginTop": "10px"
+        }
+    }
+
+    result[jData.УИД]['schema'][jData.УИД + 'Upload'] = {
+        "comp": "file",
+        "action": "",
+        "autoUpload": false,
+        "text": "Upload Selector",
+        "accept": " .jpg, .jpeg, .png, .gif",
+        "tip": "Only Images",
+        "col":"10",
+        "schema": {
+            "comp": "button",
+            "type": "Primary",
+            "style": {
+                "display": "block",
+                "marginTop":"10px"
+            },
+            "size": "large",
+            "text": jData.Наименование,
+        }
+    }
+
+
+    return result
+}
 function convertUpload(jData){
     let result = {}
     result[jData.УИД] = {
@@ -58,8 +98,8 @@ function convertRadio(jData) {
         "comp":"radioButton",
         "name": jData.Наименование,
         "style": {
-            "marginBottom":"10px",
-            "marginTop":"10px"
+            "marginBottom":"5px",
+            "marginTop":"5px"
         },
     }
 
@@ -118,7 +158,8 @@ function convertInput(jData) {
         "label": jData.Наименование,
         "placeholder": jData.Значение,
         "style": {
-            "marginTop":"10px"
+            "marginTop":"5px",
+            "marginBottom":"15px"
         },
     }
 
@@ -144,7 +185,8 @@ function convertButton(jData){
         "comp":"button",
         "text":jData.Наименование,
         "style": {
-            "marginTop":"10px"
+            "marginTop":"10px",
+            "marginBottom":"5px"
         },
     }
     return result
@@ -169,19 +211,30 @@ function convertElement(jData) {
             result =convertSelect(jData)
         }else if(jData.Тип.indexOf('ЭлементСкан') > -1) {
             result =convertUpload(jData)
+        }else if(jData.Тип.indexOf('ЭлементЧекБоксСоСканом') > -1) {
+            result =convertUploadChk(jData)
         }else if(Object.prototype.hasOwnProperty.call(jData, 'Элементы')){
-            result[jData.УИД] = {
+
+            let key = ''
+            if(jData.УИД != ''){
+                key = jData.УИД
+            }else{
+                key = jData.Наименование
+            }
+
+            result[key] = {
                 "comp": "group",
                 "col": "24",
                 "header": jData.Наименование,
                 "schema": "{}",
                 "style": {
-                    "marginBottom":"10px"
+                    "marginBottom":"10px",
+                    "marginTop":"5px"
                 },
             }
-            result[jData.УИД].schema = convertElements(jData.Элементы)
-            if (Object.keys(result[jData.УИД].schema).length === 0){
-                delete(result[jData.УИД])
+            result[key].schema = convertElements(jData.Элементы)
+            if (Object.keys(result[key].schema).length === 0){
+                delete(result[key])
             }
         }
 
@@ -211,6 +264,19 @@ function convertElements(jData) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
+function convertDataUploadChk(jData){
+    let result = {}
+
+
+    result[jData.УИД] ={}
+
+    result[jData.УИД][jData.УИД + 'Chk'] = {}
+
+    result[jData.УИД][jData.УИД + 'Upload'] = {}
+
+    return result
+}
+
 function convertDataUpload(jData) {
     let result = {}
     result[jData.УИД] = {}
@@ -285,11 +351,20 @@ function convertDataElement(jData) {
             result = convertDataSelect(jData)
         }else if(jData.Тип.indexOf('ЭлементСкан') > -1) {
             result =convertDataUpload(jData)
+        }else if(jData.Тип.indexOf('ЭлементЧекБоксСоСканом') > -1) {
+            result =convertDataUploadChk(jData)
         }else if(Object.prototype.hasOwnProperty.call(jData, 'Элементы')){
-            result[jData.УИД] = {}
-            result[jData.УИД] = convertDataElements(jData.Элементы)
-            if (Object.keys(result[jData.УИД]).length === 0){
-                delete(result[jData.УИД])
+            let key = ''
+            if(jData.УИД != ''){
+                key = jData.УИД
+            }else{
+                key = jData.Наименование
+            }
+
+            result[key] = {}
+            result[key] = convertDataElements(jData.Элементы)
+            if (Object.keys(result[key]).length === 0){
+                delete(result[key])
             }
         }
 
