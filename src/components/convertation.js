@@ -118,6 +118,117 @@ function convertRadio(jData) {
     return result
 }
 
+function convertLink(jData){
+    return jData.Ссылка
+}
+
+function convertTable(jData) {
+
+    let tempDT = []
+    let keys = []
+    let keysIsFill = false
+    jData.ПереченьДанных.forEach(function(item) {
+        if(Object.prototype.hasOwnProperty.call(item.Значение, 'type')) {
+            let i = {Ссылка:item.Значение}
+            item.Значение = convertElements(i)
+        }
+        if(Object.prototype.hasOwnProperty.call(item.ТипДПО, 'type')) {
+            let i = {Ссылка:item.ТипДПО}
+            item.ТипДПО = convertElements(i)
+        }
+        if(Object.prototype.hasOwnProperty.call(item.ФормаОбучения, 'type')) {
+            let i = {Ссылка:item.ФормаОбучения}
+            item.ФормаОбучения = convertElements(i)
+        }
+        tempDT.push(item)
+
+        if(!keysIsFill){
+            Object.keys(item).forEach(function(key) {
+                keys.push(key)
+
+            });
+            keysIsFill = true
+        }
+
+    });
+
+    let cols = []
+    keys.forEach(function(item) {
+       let maket = {'schema':{
+            "comp":"tcol",
+            "prop":item,
+            "label":item
+        }}
+        if(item == 'name'){
+            maket.schema["fixed"] = true
+        }
+
+        cols.push(maket)
+    })
+
+    let result = {}
+    result[Object.keys(jData)[0]] = {
+        "comp":"table",
+        "data":tempDT,
+        "style": {
+            "marginBottom":"5px"
+        },
+    }
+
+    result[Object.keys(jData)[0]]["cols"] = cols
+
+
+    return result
+}
+
+function convertTree(jData) {
+
+    let tempDT = []
+    //let keys = []
+    //let keysIsFill = false
+    jData.СписокРезультат.forEach(function(item) {
+
+        let cld = convertElements(item)
+        if(Object.prototype.hasOwnProperty.call(item, 'Ссылка')) {
+            let c = []
+            if(Object.prototype.hasOwnProperty.call(cld, 'type')) {
+
+                c.push({label: cld.catalog})
+                c.push({label: cld.name})
+                c.push({label: cld.type})
+                c.push({label: cld.uid})
+            }
+
+            let o = {
+                label: item.Наименование,
+            }
+            if(c.length>0){
+                o['children'] = c
+            }
+            tempDT.push(o)
+
+        }
+
+        // if(!keysIsFill){
+        //     keys = Object.keys(item.Ссылка)
+        //     keysIsFill = true
+        // }
+    });
+
+
+
+    let result = {}
+    result[Object.keys(jData)[0]] = {
+        "comp":"tree",
+        "data":tempDT,
+        "style": {
+            "marginBottom":"5px"
+        },
+    }
+
+    return result
+}
+
 function convertAlert(jData) {
     let result = {}
     result[jData.УИД] = {
@@ -238,6 +349,12 @@ function convertElement(jData) {
             }
         }
 
+    }else if(Object.prototype.hasOwnProperty.call(jData, 'СписокРезультат')) {
+        result = convertTree(jData)
+    }else if(Object.prototype.hasOwnProperty.call(jData, 'ШапкаТаблицы')){
+            result =convertTable(jData)
+    }else if(Object.prototype.hasOwnProperty.call(jData, 'Ссылка')){
+        result = convertLink(jData)
     }
     return result
 }

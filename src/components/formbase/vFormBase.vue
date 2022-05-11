@@ -98,6 +98,23 @@
                             </template>
                             <!-- END TREE -->
 
+                          <!-- table -->
+                          <template v-else-if="isComponent(obj, 'table')">
+                            <el-table
+                                :data="obj.schema.data"
+                                v-bind="bindSchema(obj)"
+
+                                @[getOnEventName(obj,0)]="onEvent(obj, $event, 0, false)"
+                                @[getOnEventName(obj,1)]="onEvent(obj, $event, 1, false)"
+                            >
+                            <el-table-column v-for="col in obj.schema.cols"
+                                v-bind="bindSchema(col)"
+                                :key = col
+                            />
+                            </el-table>
+                          </template>
+                          <!-- END table -->
+
                             <!-- UPLOAD -->
                             <template v-else-if="isComponent(obj, 'file')">
                                 <el-upload
@@ -290,6 +307,8 @@
         slider:{ comp: 'el-slider', schema:{ showTooltip:false }, events:{ change:'update' } },
         range:{ comp: 'el-slider', events:{ change:'update' } },
         alert:{ comp: 'el-alert', events:{ change:'update' } },
+        table:{ comp: 'el-table', events:{ change:'update'} },
+        tcol:{ comp: 'el-table-column', events:{ change:'update'} },
     }
     //#endregion
     export default {

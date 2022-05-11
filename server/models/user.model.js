@@ -39,17 +39,17 @@ user.Create = (newUser, result) => {
   })
 }
 
-user.getAll = result => {
-  db.query('SELECT * FROM User', (err, res) => {
+user.getAllUsers = result => {
+  db.query('SELECT * FROM User' , function(err, res){
     if (err) {
       console.log('ошибка: ', err)
-      result(null, err)
+      result({"err":err})
       return
     }
-
-    console.log('пользователь: ', res)
-    result(null, res)
+    //console.log('пользователь: ', res[0])
+    result({"result":res})
   })
+
 }
 
 user.findByEmail = (email,result) => {

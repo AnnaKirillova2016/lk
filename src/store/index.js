@@ -54,26 +54,43 @@ export default createStore({
       localStorage.removeItem('user')
       localStorage.removeItem('token')
     },
-    schemaConverterInc({state}){
-        let schemaJSON = schemaFile.schemaInt() //парсинг через json.parse не работает. Не распознаются символы
+    async schemaConverterInc({state},schemaJSON){
+
+        //let schemaJSON = schemaFile.schemaInt() //парсинг через json.parse не работает. Не распознаются символы
         //let schemaJSON = schemaFile.schemaTest1()
         //let schemaJSON = schemaFile.schemaTest()
 
-        let schemaData = convertF('select',schemaFile.schemaData())
+       /* await axios({
+            method: 'get',
+            url: 'http://localhost:3000/api/odinc/allusers',
+        })
+            .then(res =>{
+                schemaJSON = res.data
+            }).catch((error) =>{
+                console.log(error.response.status + ' ' + error.response.data)
+                return false
+            })*/
+
+
+        let schemaData = []
+        if(Object.prototype.hasOwnProperty.call(schemaJSON, 'data2')) {
+            schemaData = schemaJSON.data2
+        }
+        //let schemaData = convertF('select',schemaFile.schemaData())
        /* console.log('SelectList')
         console.log(schemaData)
         console.log('---------------------------------------')*/
         let result = {int:{},data:{}}
-        result.int = convertF('interface',schemaJSON,schemaData)
-        result.data = convertF('data',schemaJSON)
+        result.int = convertF('interface',schemaJSON.data,schemaData)
+        result.data = convertF('data',schemaJSON.data)
 
         //result = null
-        if (result != null) {
-            state.intSchema = result.int
-            state.dataSchema = result.data
-        }
+         if (result != null) {
+             state.intSchema = result.int
+             state.dataSchema = result.data
+         }
 
-        console.log(result)
+        //console.log(result)
     },
     async getTableUsers({state}){
       await axios
@@ -94,7 +111,106 @@ export default createStore({
       console.log(data)
       console.log(state.user)
       //console.log(res)
-    }
+    },
+      async getCities({dispatch}){
+         // let schemaJSON =''
+          await axios({
+              method: 'get',
+              url: 'http://localhost:3000/api/odinc/cities',
+          })
+              .then(res =>{
+                  //schemaJSON = res.data
+                  dispatch('schemaConverterInc',{ 'data': res.data })
+              }).catch((error) =>{
+                  console.log(error.response.status + ' ' + error.response.data)
+                  return false
+              })
+      },
+      exTags({dispatch}){
+          let schemaJSON = schemaFile.schemaInt()
+          let schemaData = convertF('select',schemaFile.schemaData())
+          dispatch('schemaConverterInc',{ 'data': schemaJSON,'data2':schemaData})
+      },
+      async getClients({dispatch}){
+          // let schemaJSON =''
+          await axios({
+              method: 'get',
+              url: 'http://localhost:3000/api/odinc/all_organization',
+          })
+              .then(res =>{
+                  //schemaJSON = res.data
+                  dispatch('schemaConverterInc',{ 'data': res.data })
+              }).catch((error) =>{
+                  console.log(error.response.status + ' ' + error.response.data)
+                  return false
+              })
+      },
+      async getUsrReg({dispatch}){
+          // let schemaJSON =''
+          await axios({
+              method: 'get',
+              url: 'http://localhost:3000/api/odinc/all_region_user',
+          })
+              .then(res =>{
+                  //schemaJSON = res.data
+                  dispatch('schemaConverterInc',{ 'data': res.data })
+              }).catch((error) =>{
+                  console.log(error.response.status + ' ' + error.response.data)
+                  return false
+              })
+      },
+      async getAllUsers({dispatch}){
+          // let schemaJSON =''
+          await axios({
+              method: 'get',
+              url: 'http://localhost:3000/api/odinc/allusers',
+          })
+              .then(res =>{
+                  //schemaJSON = res.data
+                  dispatch('schemaConverterInc',{ 'data': res.data })
+              }).catch((error) =>{
+                  console.log(error.response.status + ' ' + error.response.data)
+                  return false
+              })
+      },
+      async get_cdpo({dispatch},dpo){
+          // let schemaJSON =''
+          await axios({
+              method: 'get',
+              url: 'http://localhost:3000/api/odinc/programm_dpo_code1c',
+              headers:{
+                  'Content-type': 'application/json; charset=utf-8',
+                  'Accept': 'application/json; charset=utf-8',
+                  'dpo':window.btoa(unescape(encodeURIComponent( dpo )))
+              }
+          })
+              .then(res =>{
+                  //schemaJSON = res.data
+                  dispatch('schemaConverterInc',{ 'data': res.data })
+              }).catch((error) =>{
+                  console.log(error.response.status + ' ' + error.response.data)
+                  return false
+              })
+      },
+      async get_dpo({dispatch},dpo){
+          // let schemaJSON =''
+          await axios({
+              method: 'get',
+              url: 'http://localhost:3000/api/odinc/programm_dpo',
+              headers:{
+                  'Content-type': 'application/json; charset=utf-8',
+                  'Accept': 'application/json; charset=utf-8',
+                  'dpo':window.btoa(unescape(encodeURIComponent( dpo )))
+              }
+          })
+              .then(res =>{
+                  //schemaJSON = res.data
+                  dispatch('schemaConverterInc',{ 'data': res.data })
+              }).catch((error) =>{
+                  console.log(error.response.status + ' ' + error.response.data)
+                  return false
+              })
+      },
   },
   modules: {
   }

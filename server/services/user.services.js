@@ -74,15 +74,22 @@ exports.deleteUser = async function (id) {
 }
 
 // Async function to get the User List
-exports.getUsers = async function (query, page, limit) {
+exports.getUsers = async function (query, page, limit, result) {
 
     // Try Catch the awaited promise to handle the error
     try {
-        let Users = await User.getAll()
-        // Return the Userd list that was retured by the mongoose promise
-        return Users;
-    } catch (e) {
+        let users = await User.getAllUsers(res => {
+            if (res.hasOwnProperty('result')) {
+                result(res)
+
+            } else{
+                result(res)
+            }
+        return
+        })
+        // Return the User list
+        } catch (e) {
         // return a Error message describing the reason
-        throw Error('Error while Paginating Users')
+        throw Error('Error while getting Users')
     }
 }

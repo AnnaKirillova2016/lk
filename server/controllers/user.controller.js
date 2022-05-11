@@ -63,16 +63,23 @@ exports.loginUser = async function (req, res, next) {
 }
 
 
-exports.getUsers = async function (req, res, next) {
+exports.getUsers = function (req, res, next) {
 // Check the existence of the query parameters, If doesn't exists assign a default value
     let page = req.query.page ? req.query.page : 1
     let limit = req.query.limit ? req.query.limit : 10;
     try {
-        let Users = await UserService.getUsers({}, page, limit)
+        UserService.getUsers({}, page, limit, result =>{
+            if (result.hasOwnProperty('result')) {
+                return res.status(200).json({status: 200, data: result.result, message: "Succesfully Users Recieved"})
+            } else{
+                console.log(result.err)
+            }
+            return
+        })
         // Return the Users list with the appropriate HTTP password Code and Message.
-        return res.status(200).json({status: 200, data: Users, message: "Succesfully Users Recieved"});
     } catch (e) {
         //Return an Error Response Message with Code and the Error Message.
-        return res.status(400).json({status: 400, message: e.message});
+        console.log(e)
+       // return res.status(400).json({status: 400, message: e.message});
     }
 }

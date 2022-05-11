@@ -1,16 +1,20 @@
 <template>
-    <v-form-base
-            :model="dataSchema"
-            :schema="intSchema"
-            col=12
+  <div>
+    <mMenu/>
+    <pGen
+      :model="dataSchema"
+      :schema="intSchema"
+      col=12
     />
+  </div>
 </template>
 
 <script>
-    import vFormBase from '../components/formbase/vFormBase.vue'
+    import pGen from '../components/formbase/vFormBase.vue'
+    import mMenu from '../components/mainMenu.vue'
     import {mapActions, mapState} from 'vuex'
     export default {
-        components: { vFormBase},
+        components: { pGen, mMenu},
         data: ()=>({
             myModel: {
                 anketa_education_level:{
